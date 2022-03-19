@@ -1,8 +1,19 @@
+import SearchBar from "../../shared/layouts/SearchBar/SearchBar";
+import TopBar from "../../shared/layouts/TopBar/TopBar";
+import styled from "../../ui/styledComponents/styledComponents";
+
+const StyledDivContainer = styled.div`
+  width: 1010px;
+  height: 90vh;
+  margin-left: 25px;
+`;
+
 const Dashboard = () => {
   return (
-    <div>
-      <p>Dashboard</p>
-    </div>
+    <StyledDivContainer>
+      <SearchBar />
+      <TopBar />
+    </StyledDivContainer>
   );
 };
 
