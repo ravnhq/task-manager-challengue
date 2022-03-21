@@ -4,6 +4,7 @@ import {
   createGlobalStyle,
 } from "../../../ui/styledComponents/styledComponents";
 import { theme } from "../../../ui/styledComponents/theme";
+import TaskContextProvider from "../../contexts/TaskProvider";
 
 //Components
 import Sidebar from "../Sidebar/Sidebar";
@@ -38,8 +39,10 @@ const LayoutDash = ({ children }: { children: JSX.Element }) => {
       <StyledContainer>
         <GlobalStyle />
         <ThemeProvider theme={theme}>
-          <Sidebar />
-          {children}
+          <TaskContextProvider>
+            <Sidebar />
+            {children}
+          </TaskContextProvider>
         </ThemeProvider>
       </StyledContainer>
     </StyledContainerGlobal>

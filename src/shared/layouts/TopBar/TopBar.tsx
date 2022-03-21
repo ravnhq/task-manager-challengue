@@ -1,6 +1,16 @@
+import { useMutation } from "@apollo/client";
+import {
+  CreateTaskDocument,
+  CreateTaskMutation,
+  PointEstimate,
+  Status,
+  Task,
+  UserType,
+} from "../../../__generated__/graphql-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faBorderAll } from "@fortawesome/free-solid-svg-icons";
 import styled from "../../../ui/styledComponents/styledComponents";
+import { ActionKindTask, useTaskContext } from "../../contexts/TaskProvider";
 
 const StyledDivContainer = styled.div`
   width: 100%;
@@ -29,7 +39,55 @@ const StyledButtonAdd = styled.button`
   border-radius: 8px;
 `;
 
+const initTask: Task = {
+  id: "11",
+  name: "Aaron",
+  pointEstimate: PointEstimate.Four,
+  creator: {
+    avatar: null,
+    createdAt: "",
+    email: "",
+    fullName: "Aaron",
+    id: "567",
+    type: UserType.Candidate,
+    updatedAt: "",
+  },
+  status: Status.Todo,
+  assignee: {
+    avatar: null,
+    createdAt: "",
+    email: "",
+    fullName: "Brayan",
+    id: "567",
+    type: UserType.Candidate,
+    updatedAt: "",
+  },
+  createdAt: null,
+  dueDate: null,
+  position: 7,
+  tags: [],
+};
+
 const TopBar = () => {
+  const { distpach } = useTaskContext();
+
+  const [addTask, { data, loading, error }] = useMutation(CreateTaskDocument, {
+    refetchQueries: [
+      { query: CreateTaskDocument, variables: { input: { status: initTask } } },
+    ],
+  });
+
+  console.log(data);
+
+  const handleAddTask = () => {
+    addTask({ variables: { input: { status: initTask } } });
+
+    distpach({
+      type: ActionKindTask.AddTask,
+      payload: { listData: data ? [data] : null },
+    });
+  };
+
   return (
     <StyledDivContainer>
       <StyledDivIcons>
@@ -40,7 +98,7 @@ const TopBar = () => {
       </StyledDivIcons>
 
       <div>
-        <StyledButtonAdd>+</StyledButtonAdd>
+        <StyledButtonAdd onClick={handleAddTask}>+</StyledButtonAdd>
       </div>
     </StyledDivContainer>
   );

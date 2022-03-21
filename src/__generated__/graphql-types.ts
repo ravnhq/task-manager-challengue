@@ -143,44 +143,135 @@ export enum UserType {
   Candidate = 'CANDIDATE'
 }
 
-export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
+export type CreateTaskMutationVariables = Exact<{
+  input: CreateTaskInput;
+}>;
 
 
-export type GetProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: string, fullName: string } };
+export type CreateTaskMutation = { __typename?: 'Mutation', createTask: { __typename?: 'Task', name: string, pointEstimate: PointEstimate, position: number, dueDate: any, tags: Array<TaskTag>, createdAt: any, status: Status, assignee?: { __typename?: 'User', createdAt: any, email: string, fullName: string, avatar?: string | null, id: string, type: UserType, updatedAt: any } | null, creator: { __typename?: 'User', createdAt: any, email: string, fullName: string, avatar?: string | null, id: string, type: UserType, updatedAt: any } } };
+
+export type GetTasksQueryVariables = Exact<{
+  input: FilterTaskInput;
+}>;
 
 
-export const GetProfileDocument = gql`
-    query getProfile {
-  profile {
+export type GetTasksQuery = { __typename?: 'Query', tasks: Array<{ __typename?: 'Task', id: string, name: string, pointEstimate: PointEstimate, status: Status, createdAt: any, dueDate: any, position: number, tags: Array<TaskTag>, creator: { __typename?: 'User', avatar?: string | null, createdAt: any, email: string, fullName: string, id: string, type: UserType, updatedAt: any }, assignee?: { __typename?: 'User', avatar?: string | null, createdAt: any, email: string, fullName: string, id: string, type: UserType, updatedAt: any } | null }> };
+
+
+export const CreateTaskDocument = gql`
+    mutation createTask($input: CreateTaskInput!) {
+  createTask(input: $input) {
+    name
+    pointEstimate
+    position
+    dueDate
+    assignee {
+      createdAt
+      email
+      fullName
+      avatar
+      id
+      type
+      updatedAt
+    }
+    tags
+    createdAt
+    creator {
+      createdAt
+      email
+      fullName
+      avatar
+      id
+      type
+      updatedAt
+    }
+    status
+  }
+}
+    `;
+export type CreateTaskMutationFn = Apollo.MutationFunction<CreateTaskMutation, CreateTaskMutationVariables>;
+
+/**
+ * __useCreateTaskMutation__
+ *
+ * To run a mutation, you first call `useCreateTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTaskMutation, { data, loading, error }] = useCreateTaskMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateTaskMutation(baseOptions?: Apollo.MutationHookOptions<CreateTaskMutation, CreateTaskMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument, options);
+      }
+export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
+export type CreateTaskMutationResult = Apollo.MutationResult<CreateTaskMutation>;
+export type CreateTaskMutationOptions = Apollo.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
+export const GetTasksDocument = gql`
+    query getTasks($input: FilterTaskInput!) {
+  tasks(input: $input) {
     id
-    fullName
+    name
+    pointEstimate
+    creator {
+      avatar
+      createdAt
+      email
+      fullName
+      id
+      type
+      updatedAt
+    }
+    status
+    assignee {
+      avatar
+      createdAt
+      email
+      fullName
+      id
+      type
+      updatedAt
+    }
+    createdAt
+    dueDate
+    position
+    tags
   }
 }
     `;
 
 /**
- * __useGetProfileQuery__
+ * __useGetTasksQuery__
  *
- * To run a query within a React component, call `useGetProfileQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetTasksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetProfileQuery({
+ * const { data, loading, error } = useGetTasksQuery({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useGetProfileQuery(baseOptions?: Apollo.QueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
+export function useGetTasksQuery(baseOptions: Apollo.QueryHookOptions<GetTasksQuery, GetTasksQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
+        return Apollo.useQuery<GetTasksQuery, GetTasksQueryVariables>(GetTasksDocument, options);
       }
-export function useGetProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
+export function useGetTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTasksQuery, GetTasksQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
+          return Apollo.useLazyQuery<GetTasksQuery, GetTasksQueryVariables>(GetTasksDocument, options);
         }
-export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
-export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
-export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
+export type GetTasksQueryHookResult = ReturnType<typeof useGetTasksQuery>;
+export type GetTasksLazyQueryHookResult = ReturnType<typeof useGetTasksLazyQuery>;
+export type GetTasksQueryResult = Apollo.QueryResult<GetTasksQuery, GetTasksQueryVariables>;
